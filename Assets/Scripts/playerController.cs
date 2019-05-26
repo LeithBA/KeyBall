@@ -15,6 +15,7 @@ public class playerController : MonoBehaviour
     Rigidbody ballrb;
     public float force, upforce;
     public Color color;
+	public GameObject otherPlayer;
 
     void Start()
     {
@@ -57,13 +58,20 @@ public class playerController : MonoBehaviour
                 Transform key = keys.transform.Find(vKey.ToString());
                 ParticleSystem PS = key.GetChild(0).GetComponent<ParticleSystem>();
 
-                if (Vector3.Distance(this.transform.position, key.position) < 10)
+                if (Vector3.Distance(this.transform.position, key.position) < 7)
                 {
                     ParticleSystem.MainModule newMain = PS.main;
                     newMain.startColor = color;
                     key.GetChild(0).GetComponent<ParticleSystem>().Play();
                     target = key;
                 }
+				else if (Vector3.Distance(this.transform.position, key.position) >= 7 && 
+						 Vector3.Distance(otherPlayer.transform.position, key.position) >= 7)
+				{
+					ParticleSystem.MainModule newMain = PS.main;
+                    newMain.startColor = Color.white;
+                    key.GetChild(0).GetComponent<ParticleSystem>().Play();
+				}
             }
         }
     }
