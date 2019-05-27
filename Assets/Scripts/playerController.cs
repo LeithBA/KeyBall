@@ -13,9 +13,9 @@ public class playerController : MonoBehaviour
     Animator anim;
     public GameObject ball;
     Rigidbody ballrb;
-    public float force, upforce;
     public Color color;
-	public GameObject otherPlayer;
+    public GameObject otherPlayer;
+    Rigidbody rb;
 
     void Start()
     {
@@ -23,6 +23,7 @@ public class playerController : MonoBehaviour
         destination = agent.destination;
         anim = GetComponent<Animator>();
         ballrb = ball.GetComponent<Rigidbody>();
+        rb = this.GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -35,17 +36,29 @@ public class playerController : MonoBehaviour
 
             if (Vector3.Distance(destination, target.position) > 2.0f)
             {
-                anim.SetBool("running", true);
+                //anim.SetBool("running", true);
                 destination = target.position;
                 agent.destination = destination;
             }
 
 
-            Debug.Log(Vector3.Distance(destination, this.transform.position));
+            //Debug.Log(Vector3.Distance(destination, this.transform.position));
             if (Vector3.Distance(destination, this.transform.position) > 2.0f)
+            {
                 anim.SetBool("running", true);
+                rb.freezeRotation = false;
+                rb.constraints = RigidbodyConstraints.None;
+            }
             else
+            {
                 anim.SetBool("running", false);
+                rb.constraints = RigidbodyConstraints.FreezeRotationX |
+                                        RigidbodyConstraints.FreezeRotationY |
+                                        RigidbodyConstraints.FreezeRotationZ |
+                                        RigidbodyConstraints.FreezePositionX | 
+                                        RigidbodyConstraints.FreezePositionY | 
+                                        RigidbodyConstraints.FreezePositionZ;
+            }
         }
     }
 
@@ -65,22 +78,14 @@ public class playerController : MonoBehaviour
                     key.GetChild(0).GetComponent<ParticleSystem>().Play();
                     target = key;
                 }
-				else if (Vector3.Distance(this.transform.position, key.position) >= 7 && 
-						 Vector3.Distance(otherPlayer.transform.position, key.position) >= 7)
-				{
-					ParticleSystem.MainModule newMain = PS.main;
+                else if (Vector3.Distance(this.transform.position, key.position) >= 7 &&
+                         Vector3.Distance(otherPlayer.transform.position, key.position) >= 7)
+                {
+                    ParticleSystem.MainModule newMain = PS.main;
                     newMain.startColor = Color.white;
                     key.GetChild(0).GetComponent<ParticleSystem>().Play();
-				}
+                }
             }
-        }
-    }
-
-    void OnCollisionEnter(Collision c)
-    {
-        if (c.gameObject == ball)
-        {
-            ballrb.AddExplosionForce(force, this.transform.position, 10, upforce, ForceMode.Impulse);
         }
     }
 }
