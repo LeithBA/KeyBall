@@ -18,6 +18,9 @@ public class gameManager : MonoBehaviour
 
     void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         time = gameDuration;
         timeDisplay.text = "<b>" + Mathf.RoundToInt(time).ToString() + "</b>";
         scoreDisplay.text = "<b>0-0</b>";
@@ -60,8 +63,8 @@ public class gameManager : MonoBehaviour
             gameOverText.text = "<b>DRAW!</b>";
         }
         gameOverScreen.SetActive(true);
-        gameOverText.transform.localScale = Vector3.Lerp(gameOverText.transform.localScale, new Vector3(1,1,1), 0.1f);
-        if (gameOverText.transform.localScale == new Vector3(1,1,1))
+        gameOverText.transform.localScale = Vector3.Lerp(gameOverText.transform.localScale, new Vector3(1, 1, 1), 0.1f);
+        if (gameOverText.transform.localScale == new Vector3(1, 1, 1))
             playing = false;
     }
 }
