@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+ using UnityEngine.Rendering.PostProcessing;
 
 public class gameManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class gameManager : MonoBehaviour
     Text gameOverText;
     public float time;
     public int bluePoints, redPoints;
+    PostProcessVolume PPV;
+    ChromaticAberration chrom;
 
 
     void Start()
@@ -25,6 +28,9 @@ public class gameManager : MonoBehaviour
         timeDisplay.text = "<b>" + Mathf.RoundToInt(time).ToString() + "</b>";
         scoreDisplay.text = "<b>0-0</b>";
         gameOverText = gameOverScreen.transform.GetChild(0).transform.GetChild(0).GetComponent<Text>();
+
+        PPV = Camera.main.GetComponent<PostProcessVolume>();
+        PPV.profile.TryGetSettings(out chrom);
     }
 
     void Update()
@@ -64,6 +70,7 @@ public class gameManager : MonoBehaviour
         }
         gameOverScreen.SetActive(true);
         gameOverText.transform.localScale = Vector3.Lerp(gameOverText.transform.localScale, new Vector3(1, 1, 1), 0.1f);
+        chrom.intensity.value = Mathf.Lerp(chrom.intensity.value, 1.0f, 0.3f);
         if (gameOverText.transform.localScale == new Vector3(1, 1, 1))
             playing = false;
     }
